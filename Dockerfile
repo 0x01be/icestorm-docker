@@ -1,4 +1,4 @@
-FROM 0x01be/alpine:edge as builder
+FROM alpine as builder
 
 RUN apk --no-cache add --virtual icestorm-build-dependencies \
     git \
@@ -7,16 +7,16 @@ RUN apk --no-cache add --virtual icestorm-build-dependencies \
     pkgconfig \
     libftdi1-dev
 
-RUN git clone https://github.com/cliffordwolf/icestorm.git /icestorm
+RUN git clone --depth 1 https://github.com/YosysHQ/icestorm.git /icestorm
 
 WORKDIR /icestorm
 
 RUN make
 RUN PREFIX=/opt/icestorm make install
 
-FROM 0x01be/alpine:edge
+FROM alpine
 
 COPY --from=builder /opt/icestorm/ /opt/icestorm/
 
-ENV PATH $PATH:/opt/ocestorm/bin
+ENV PATH $PATH:/opt/icestorm/bin
 
