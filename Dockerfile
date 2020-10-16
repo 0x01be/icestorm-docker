@@ -1,4 +1,4 @@
-FROM alpine as build
+FROM arm32v6/alpine as build
 
 RUN apk --no-cache add --virtual icestorm-build-dependencies \
     git \
@@ -15,7 +15,7 @@ WORKDIR /icestorm
 RUN make
 RUN PREFIX=/opt/icestorm make install
 
-FROM alpine
+FROM arm32v6/alpine
 
 COPY --from=build /opt/icestorm/ /opt/icestorm/
 
