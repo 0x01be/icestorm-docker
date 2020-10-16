@@ -1,4 +1,4 @@
-FROM alpine as builder
+FROM alpine as build
 
 RUN apk --no-cache add --virtual icestorm-build-dependencies \
     git \
@@ -7,7 +7,8 @@ RUN apk --no-cache add --virtual icestorm-build-dependencies \
     pkgconfig \
     libftdi1-dev
 
-RUN git clone --depth 1 https://github.com/YosysHQ/icestorm.git /icestorm
+ENV ICESTORM_REVISION master
+RUN git clone --depth 1 --branch ${ICESTORM_REVISION} https://github.com/YosysHQ/icestorm.git /icestorm
 
 WORKDIR /icestorm
 
@@ -16,7 +17,11 @@ RUN PREFIX=/opt/icestorm make install
 
 FROM alpine
 
-COPY --from=builder /opt/icestorm/ /opt/icestorm/
+COPY --from=build /opt/icestorm/ /opt/icestorm/
+
+RUN apk add --no-cache --virtual icestorm-runtime-dependencies \
+    libstdc++ \
+    libftdi1
 
 ENV PATH $PATH:/opt/icestorm/bin
 
