@@ -27,7 +27,7 @@ RUN adduser -D -u 1000 icestorm
 
 WORKDIR /workspace
 
-RUN chrown icestorm:icestorm /workspace
+RUN chown icestorm:icestorm /workspace
 
 USER icestorm
 
