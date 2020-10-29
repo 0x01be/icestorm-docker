@@ -25,6 +25,7 @@ COPY --from=build /opt/icestorm/ /opt/icestorm/
 
 RUN adduser -D -u 1000 icestorm
 
+RUN mkdir -p /workspace
 RUN chown icestorm:icestorm /workspace
 
 USER icestorm
