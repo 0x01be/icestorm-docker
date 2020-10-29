@@ -17,19 +17,18 @@ RUN PREFIX=/opt/icestorm make install
 
 FROM alpine
 
-COPY --from=build /opt/icestorm/ /opt/icestorm/
-
 RUN apk add --no-cache --virtual icestorm-runtime-dependencies \
     libstdc++ \
     libftdi1
 
-RUN adduser -D -u 1000 icestorm
+COPY --from=build /opt/icestorm/ /opt/icestorm/
 
-WORKDIR /workspace
+RUN adduser -D -u 1000 icestorm
 
 RUN chown icestorm:icestorm /workspace
 
 USER icestorm
 
 ENV PATH $PATH:/opt/icestorm/bin
+WORKDIR /workspace
 
