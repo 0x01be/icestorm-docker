@@ -1,35 +1,30 @@
-FROM alpine as build
+FROM 0x01be/base as build
 
+WORKDIR /icestorm
+
+ENV REVISION=master
 RUN apk --no-cache add --virtual icestorm-build-dependencies \
     git \
     python3 \
     build-base \
     pkgconfig \
-    libftdi1-dev
-
-ENV ICESTORM_REVISION master
-RUN git clone --depth 1 --branch ${ICESTORM_REVISION} https://github.com/YosysHQ/icestorm.git /icestorm
-
-WORKDIR /icestorm
-
-RUN make
+    libftdi1-dev &&\
+    git clone --depth 1 --branch ${ICESTORM_REVISION} https://github.com/YosysHQ/icestorm.git /icestorm &&\
+    make
 RUN PREFIX=/opt/icestorm make install
 
-FROM alpine
-
-RUN apk add --no-cache --virtual icestorm-runtime-dependencies \
-    libstdc++ \
-    libftdi1
+FROM 0x01be/base
 
 COPY --from=build /opt/icestorm/ /opt/icestorm/
 
-RUN adduser -D -u 1000 icestorm
-
-RUN mkdir -p /workspace
-RUN chown icestorm:icestorm /workspace
+WORKDIR /workspace
+RUN apk add --no-cache --virtual icestorm-runtime-dependencies \
+    libstdc++ \
+    libftdi1 &&\
+    adduser -D -u 1000 icestorm &&\
+    mkdir -p /workspace &&\
+    hown icestorm:icestorm /workspace
 
 USER icestorm
-
-ENV PATH $PATH:/opt/icestorm/bin
-WORKDIR /workspace
+ENV PATH=${PATH}:/opt/icestorm/bin
 
