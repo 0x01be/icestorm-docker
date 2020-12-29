@@ -9,7 +9,7 @@ RUN apk --no-cache add --virtual icestorm-build-dependencies \
     build-base \
     pkgconfig \
     libftdi1-dev &&\
-    git clone --depth 1 --branch ${ICESTORM_REVISION} https://github.com/YosysHQ/icestorm.git /icestorm &&\
+    git clone --depth 1 --branch ${REVISION} https://github.com/YosysHQ/icestorm.git /icestorm &&\
     make
 RUN PREFIX=/opt/icestorm make install
 
