@@ -23,7 +23,7 @@ RUN apk add --no-cache --virtual icestorm-runtime-dependencies \
     libftdi1 &&\
     adduser -D -u 1000 icestorm &&\
     mkdir -p /workspace &&\
-    hown icestorm:icestorm /workspace
+    chown icestorm:icestorm /workspace
 
 USER icestorm
 ENV PATH=${PATH}:/opt/icestorm/bin
